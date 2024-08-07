@@ -231,10 +231,10 @@ Each command helps you gather more information about the database and its struct
 By default, SQLMap will attempt to test all parameters for SQL injection.
 If you only want SQLMap to test a specific parameter, you can use the **-p option to specify the parameter.
 
-      ```bash
+      ```
      sqlmap -u "http://example.com/login" --data="username=admin&password=admin"
      sqlmap -u "http://example.com/login" --data="username=admin&password=admin" -p "username"
-```
+
      ```bash
      sqlmap -r request.txt
      ```
