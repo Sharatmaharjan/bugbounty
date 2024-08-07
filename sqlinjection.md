@@ -212,3 +212,120 @@ Each command helps you gather more information about the database and its struct
 3. **Enumerate Databases:** Lists all databases on the server.
 4. **Enumerate Tables:** Lists all tables within a specified database.
 5. **Enumerate Columns:** Lists all columns within a specified table.
+   ---
+   When looking for SQL injection vulnerabilities, it's important to thoroughly examine various parts of the HTTP request where user input is processed by the server. Here are the key areas to focus on:
+
+### 1. **Query Parameters**
+   - **Description:** Parameters included in the URL of GET requests.
+   - **Example:** `http://example.com/product?id=1`
+   - **Tool:** SQLMap command for GET request:
+     ```bash
+     sqlmap -u "http://example.com/product?id=1"
+     ```
+
+### 2. **POST Data**
+   - **Description:** Parameters included in the body of POST requests.
+   - **Example:** Form submissions, API requests.
+   - **Tool:** Capture the POST request with tools like Burp Suite or your browser's developer tools, then use SQLMap:
+By default, SQLMap will attempt to test all parameters for SQL injection.
+If you only want SQLMap to test a specific parameter, you can use the **-p option to specify the parameter.
+     ```bash
+     sqlmap -u "http://example.com/login" --data="username=admin&password=admin"
+     sqlmap -u "http://example.com/login" --data="username=admin&password=admin" -p "username"
+```
+     ```bash
+     sqlmap -r request.txt
+     ```
+   - **Sample request.txt:**
+     ```
+     POST /login HTTP/1.1
+     Host: example.com
+     Content-Type: application/x-www-form-urlencoded
+     Content-Length: 32
+
+     username=admin&password=admin
+     ```
+
+### 3. **HTTP Headers**
+   - **Description:** Headers sent with HTTP requests, such as `User-Agent`, `Referer`, `X-Forwarded-For`, etc.
+   - **Example:** Custom headers set by the application or by the client.
+   - **Tool:** Use SQLMap to specify headers:
+     ```bash
+     sqlmap -u "http://example.com/product?id=1" --headers="User-Agent: sqlmap"
+     ```
+
+### 4. **Cookies**
+   - **Description:** Cookies sent by the client to the server, often used to maintain sessions or store preferences.
+   - **Example:** `Cookie: sessionId=abcd1234`
+   - **Tool:** Use SQLMap to specify cookies:
+     ```bash
+     sqlmap -u "http://example.com/product?id=1" --cookie="sessionId=abcd1234"
+     ```
+
+### 5. **URL Path**
+   - **Description:** Parameters included in the URL path rather than in query parameters.
+   - **Example:** `http://example.com/product/1`
+   - **Tool:** Use SQLMap to test URL paths:
+     ```bash
+     sqlmap -u "http://example.com/product/1*"
+     ```
+
+### 6. **JSON Data**
+   - **Description:** JSON data sent in the body of POST requests, common in API endpoints.
+   - **Example:** `{"username": "admin", "password": "admin"}`
+   - **Tool:** Save the JSON data in a file and use SQLMap with the `--data` option:
+     ```bash
+     sqlmap -u "http://example.com/api/login" --data='{"username": "admin", "password": "admin"}' --headers="Content-Type: application/json"
+     ```
+
+### 7. **XML Data**
+   - **Description:** XML data sent in the body of POST requests, common in SOAP and some REST APIs.
+   - **Example:**
+     ```xml
+     <request>
+       <username>admin</username>
+       <password>admin</password>
+     </request>
+     ```
+   - **Tool:** Save the XML data in a file and use SQLMap with the `--data` option:
+     ```bash
+     sqlmap -u "http://example.com/api/login" --data='<request><username>admin</username><password>admin</password></request>' --headers="Content-Type: application/xml"
+     ```
+
+### Example of Testing SQL Injection in a POST Request
+
+1. **Capture the POST Request**
+   - Use a tool to capture the request:
+     ```
+     POST /login HTTP/1.1
+     Host: example.com
+     Content-Type: application/x-www-form-urlencoded
+     Content-Length: 32
+
+     username=admin&password=admin
+     ```
+
+2. **Save the Request to a File (`request.txt`)**
+   - The content of `request.txt`:
+     ```
+     POST /login HTTP/1.1
+     Host: example.com
+     Content-Type: application/x-www-form-urlencoded
+     Content-Length: 32
+
+     username=admin&password=admin
+     ```
+
+3. **Run SQLMap Using the Captured Request**
+   - Command:
+     ```bash
+     sqlmap -r request.txt
+     ```
+
+### Tips for Manual Testing
+
+- **Check All Input Fields:** Don't just focus on obvious parameters; check hidden fields, form fields, and dynamically generated parameters.
+- **Try Different Payloads:** Use a variety of SQL injection payloads to see how the application responds.
+- **Observe Error Messages:** Detailed error messages can give clues about vulnerabilities.
+- **Use Proxies and Intercepting Tools:** Tools like Burp Suite can help manipulate requests and analyze responses.
+
