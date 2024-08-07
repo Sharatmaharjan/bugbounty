@@ -235,7 +235,7 @@ If you only want SQLMap to test a specific parameter, you can use the **-p optio
      sqlmap -u "http://example.com/login" --data="username=admin&password=admin"
      sqlmap -u "http://example.com/login" --data="username=admin&password=admin" -p "username"
 
-     ```bash
+
      sqlmap -r request.txt
      ```
    - **Sample request.txt:**
