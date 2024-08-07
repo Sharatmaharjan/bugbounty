@@ -212,7 +212,8 @@ Each command helps you gather more information about the database and its struct
 3. **Enumerate Databases:** Lists all databases on the server.
 4. **Enumerate Tables:** Lists all tables within a specified database.
 5. **Enumerate Columns:** Lists all columns within a specified table.
-   ---
+
+---
    When looking for SQL injection vulnerabilities, it's important to thoroughly examine various parts of the HTTP request where user input is processed by the server. Here are the key areas to focus on:
 
 ### 1. **Query Parameters**
@@ -229,7 +230,8 @@ Each command helps you gather more information about the database and its struct
    - **Tool:** Capture the POST request with tools like Burp Suite or your browser's developer tools, then use SQLMap:
 By default, SQLMap will attempt to test all parameters for SQL injection.
 If you only want SQLMap to test a specific parameter, you can use the **-p option to specify the parameter.
-     ```bash
+
+      ```bash
      sqlmap -u "http://example.com/login" --data="username=admin&password=admin"
      sqlmap -u "http://example.com/login" --data="username=admin&password=admin" -p "username"
 ```
