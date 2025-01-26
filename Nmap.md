@@ -1,4 +1,4 @@
-### **Nmap (Network Mapper) 
+### **Nmap (Network Mapper)**
 
 #### **Introduction to Nmap**
 Nmap (Network Mapper) is a powerful open-source tool used for network discovery and security auditing. It helps in mapping networks, identifying live hosts, detecting open ports, and determining services and operating systems running on target machines.
